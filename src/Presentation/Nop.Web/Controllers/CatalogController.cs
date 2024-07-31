@@ -263,6 +263,20 @@ public partial class CatalogController : BasePublicController
         return PartialView("_ProductsInGridOrLines", model);
     }
 
+    //ignore SEO friendly URLs checks
+    [CheckLanguageSeoCode(ignore: true)]
+    public virtual async Task<IActionResult> VendorReviews(int vendorId, VendorReviewsPagingFilteringModel pagingModel)
+    {
+        var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
+
+        if (!await CheckVendorAvailabilityAsync(vendor))
+            return NotFound();
+
+        var model = await _catalogModelFactory.PrepareVendorProductReviewsModelAsync(vendor, pagingModel);
+
+        return PartialView(model);
+    }
+
     public virtual async Task<IActionResult> VendorAll()
     {
         //we don't allow viewing of vendors if "vendors" block is hidden
