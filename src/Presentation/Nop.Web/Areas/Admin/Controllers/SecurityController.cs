@@ -5,7 +5,7 @@ using Nop.Services.Customers;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Security;
-using Nop.Web.Framework.Menu;
+using Nop.Web.Framework.AdminMenu;
 using Nop.Web.Framework.Mvc.Filters;
 using ILogger = Nop.Services.Logging.ILogger;
 
@@ -20,7 +20,7 @@ public partial class SecurityController : BaseAdminController
     protected readonly IPermissionService _permissionService;
     protected readonly ISecurityModelFactory _securityModelFactory;
     protected readonly IWorkContext _workContext;
-    protected readonly IXmlSiteMap _xmlSiteMap;
+    protected readonly IAdminMenu _xmlSiteMap;
 
     private static readonly char[] _separator = [','];
     private static Dictionary<string, string> _menuSystemNames = new();
@@ -34,7 +34,7 @@ public partial class SecurityController : BaseAdminController
         IPermissionService permissionService,
         ISecurityModelFactory securityModelFactory,
         IWorkContext workContext,
-        IXmlSiteMap xmlSiteMap)
+        IAdminMenu xmlSiteMap)
     {
         _customerService = customerService;
         _logger = logger;
@@ -52,24 +52,22 @@ public partial class SecurityController : BaseAdminController
     {
         if (!_menuSystemNames.Any())
         {
-            await _xmlSiteMap.LoadFromAsync("~/Areas/Admin/sitemap.config");
-
-            void fillSystemNames(SiteMapNode node)
+            void fillSystemNames(AdminMenuItem node)
             {
                 if (!string.IsNullOrEmpty(node.Url))
                     return;
 
-                if (!string.IsNullOrEmpty(node.ControllerName) && !string.IsNullOrEmpty(node.ActionName))
-                {
-                    var key = $"{node.ControllerName}.{node.ActionName}";
-                    _menuSystemNames[key] = node.SystemName;
-                }
+                //if (!string.IsNullOrEmpty(node.ControllerName) && !string.IsNullOrEmpty(node.ActionName))
+                //{
+                //    var key = $"{node.ControllerName}.{node.ActionName}";
+                //    _menuSystemNames[key] = node.SystemName;
+                //}
 
                 foreach (var childNode in node.ChildNodes) 
                     fillSystemNames(childNode);
             }
 
-            fillSystemNames(_xmlSiteMap.RootNode);
+            fillSystemNames(await _xmlSiteMap.GetRootNodeAsync(true));
         }
 
         var currentCustomer = await _workContext.GetCurrentCustomerAsync();

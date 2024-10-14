@@ -51,8 +51,8 @@ using Nop.Services.Tax;
 using Nop.Services.Themes;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
+using Nop.Web.Framework.AdminMenu;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Menu;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
@@ -306,8 +306,8 @@ public partial class NopStartup : INopStartup
                  }, typeof(IConsumer<>)))
             services.AddScoped(findInterface, consumer);
 
-        //XML sitemap
-        services.AddScoped<IXmlSiteMap, XmlSiteMap>();
+        //admin menu
+        services.AddScoped<IAdminMenu, AdminMenu.AdminMenu>();
 
         //register the Lazy resolver for .Net IoC
         var useAutofac = appSettings.Get<CommonConfig>().UseAutofac;
