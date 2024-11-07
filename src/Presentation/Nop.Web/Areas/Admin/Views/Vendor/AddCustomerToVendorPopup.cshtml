@@ -3,7 +3,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.PageTitle = T("Admin.Vendors.Fields.Customer.Choose").Text;
+    ViewBag.PageTitle = T("Admin.Vendors.PmCustomer.Choose").Text;
 
     var customerIdInput = Context.Request.Query["customerIdInput"];
     var customerInfoInput = Context.Request.Query["customerInfoInput"];
@@ -16,7 +16,7 @@
       asp-route-btnId="@btnId">
     <div class="content-header clearfix">
         <h1 class="float-left">
-            @T("Admin.Vendors.Fields.Customer.Choose")
+            @T("Admin.Vendors.PmCustomer.Choose")
         </h1>
         <div class="float-right">
             &nbsp;
